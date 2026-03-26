@@ -36,7 +36,7 @@ All data from [FRED](https://fred.stlouisfed.org) (Federal Reserve Economic Data
 
 ---
 
-© Dr. Harish Gupta, DPA
-Helms School of Government, Liberty University (Alumni)
+<p align="center">© Dr. Harish Gupta, DPA
+Helms School of Government, Liberty University (Alumni)</p>
 
 <p align="center"><em>Dedicated in Honor of 32<sup>nd</sup> President Franklin Delano Roosevelt.</em></p>
