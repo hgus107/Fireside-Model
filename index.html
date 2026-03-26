@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Fireside Model</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    background: #f9f8f6;
+    color: #2c2c2c;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 40px 15px;
+  }
+
+  .header {
+    text-align: center;
+    padding: 50px 20px 30px;
+    border-bottom: 2px solid #1F4E79;
+    margin-bottom: 40px;
+  }
+  .header h1 {
+    font-size: 2.4em;
+    font-weight: 700;
+    color: #1F4E79;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .header p {
+    font-size: 1.05em;
+    color: #666;
+    font-style: italic;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 10px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78em;
+    white-space: nowrap;
+  }
+  thead th {
+    background: #1F4E79;
+    color: #fff;
+    padding: 10px 6px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.82em;
+    line-height: 1.4;
+    border: 1px solid #16405e;
+  }
+  tbody td {
+    padding: 6px 5px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  tbody tr:nth-child(even) { background: #f4f4f2; }
+  tbody tr:nth-child(odd) { background: #fff; }
+
+  .year-cell {
+    background: #FFF2CC !important;
+    font-weight: 700;
+  }
+  .result-pos { color: #2E7D32; font-weight: 700; }
+  .result-neg { color: #8B0000; font-weight: 700; }
+  .result-zero { color: #333; font-weight: 700; }
+  .result-cell { background: #E2EFDA !important; }
+  .predicted-cell { background: #D6E4F0 !important; font-weight: 700; }
+  .na-cell { color: #999; background: #f2f2f2 !important; }
+
+  .input-row td {
+    background: #FFF8E1 !important;
+    padding: 4px;
+  }
+  .input-row input {
+    width: 85%;
+    padding: 5px 3px;
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 0.95em;
+    text-align: center;
+    border: 1.5px solid #E65100;
+    border-radius: 3px;
+    background: #fff;
+    outline: none;
+  }
+  .input-row input:focus {
+    border-color: #1F4E79;
+    box-shadow: 0 0 4px rgba(31,78,121,0.3);
+  }
+
+  .output-section {
+    margin: 30px 0;
+    padding: 24px;
+    background: #1F4E79;
+    border-radius: 6px;
+    text-align: center;
+  }
+  .output-section h3 {
+    color: #fff;
+    font-size: 1em;
+    margin-bottom: 10px;
+    font-weight: 400;
+  }
+  .output-number {
+    font-size: 2.6em;
+    font-weight: 700;
+    color: #FFD54F;
+    letter-spacing: 1px;
+  }
+  .output-note {
+    color: #b0c4de;
+    font-size: 0.85em;
+    margin-top: 8px;
+  }
+
+  .section-heading {
+    background: #E65100;
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 0.95em;
+    font-weight: 700;
+    margin-top: 40px;
+    margin-bottom: 0;
+  }
+  .legend-content {
+    padding: 16px 20px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-top: none;
+  }
+  .legend-content p {
+    font-size: 0.88em;
+    margin-bottom: 8px;
+    color: #333;
+  }
+  .legend-content p:last-child { margin-bottom: 0; }
+  .legend-label { font-weight: 700; }
+  .note-text { font-weight: 700; }
+
+  .equation-box {
+    background: #fff;
+    border: 2px solid #1F4E79;
+    border-radius: 6px;
+    padding: 24px;
+    margin: 20px 0;
+    text-align: center;
+  }
+  .equation-box p {
+    font-size: 0.92em;
+    line-height: 1.8;
+    color: #1F4E79;
+    font-weight: 700;
+  }
+  .equation-stats {
+    margin-top: 12px;
+    font-size: 0.85em;
+    color: #666;
+    font-weight: 400;
+  }
+
+  .downloads {
+    margin: 40px 0 20px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 6px;
+  }
+  .downloads h3 {
+    font-size: 1em;
+    margin-bottom: 12px;
+    color: #1F4E79;
+  }
+  .downloads a {
+    display: inline-block;
+    margin-right: 20px;
+    padding: 10px 20px;
+    background: #1F4E79;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 700;
+  }
+  .downloads a:hover { background: #16405e; }
+  .downloads .tbd {
+    display: inline-block;
+    margin-right: 20px;
+    padding: 10px 20px;
+    background: #ccc;
+    color: #666;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 700;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: 40px;
+    border-top: 1px solid #ddd;
+    font-size: 0.85em;
+    color: #888;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>THE FIRESIDE MODEL</h1>
+    <p>A polls-free forecasting model for U.S. midterm House elections</p>
+  </div>
+
+  <div class="table-wrapper">
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>President (Party)</th>
+          <th>Data Window</th>
+          <th>CPI-Food<br>% Chg</th>
+          <th>CPI-Energy<br>% Chg</th>
+          <th>Consumer<br>Sentiment<br>Pt Chg</th>
+          <th>GDP<br>Growth %</th>
+          <th>Jobless<br>Claims Chg<br>(000s)</th>
+          <th>Model<br>Predicted</th>
+          <th>Actual<br>Gained/Lost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="year-cell">1978</td><td>Carter (D)</td><td>Feb-1977 – Oct-1978</td><td>16.12</td><td>12.47</td><td>-7.8</td><td>5.94</td><td>-100.0</td><td class="predicted-cell">-15.8</td><td class="result-cell result-neg">-15</td></tr>
+        <tr><td class="year-cell">1982</td><td>Reagan (R)</td><td>Feb-1981 – Oct-1982</td><td>6.62</td><td>6.83</td><td>6.5</td><td>0.03</td><td>284.0</td><td class="predicted-cell">-31.5</td><td class="result-cell result-neg">-26</td></tr>
+        <tr><td class="year-cell">1986</td><td>Reagan (R)</td><td>Feb-1985 – Oct-1986</td><td>5.04</td><td>-17.45</td><td>1.9</td><td>3.56</td><td>40.0</td><td class="predicted-cell">+3.4</td><td class="result-cell result-neg">-5</td></tr>
+        <tr><td class="year-cell">1990</td><td>Bush Sr. (R)</td><td>Feb-1989 – Oct-1990</td><td>9.47</td><td>22.03</td><td>-31.5</td><td>1.70</td><td>107.0</td><td class="predicted-cell">-2.7</td><td class="result-cell result-neg">-8</td></tr>
+        <tr><td class="year-cell">1994</td><td>Clinton (D)</td><td>Feb-1993 – Oct-1994</td><td>4.08</td><td>1.34</td><td>6.1</td><td>3.38</td><td>-15.0</td><td class="predicted-cell">-32.3</td><td class="result-cell result-neg">-54</td></tr>
+        <tr><td class="year-cell">1998</td><td>Clinton (D)</td><td>Feb-1997 – Oct-1998</td><td>3.51</td><td>-11.74</td><td>-2.3</td><td>4.70</td><td>-40.0</td><td class="predicted-cell">-6.9</td><td class="result-cell result-pos">+5</td></tr>
+        <tr><td class="year-cell">2002</td><td>Bush Jr. (R)</td><td>Feb-2001 – Oct-2002</td><td>3.04</td><td>-5.37</td><td>-10.0</td><td>1.09</td><td>58.0</td><td class="predicted-cell">+6.5</td><td class="result-cell result-pos">+8</td></tr>
+        <tr><td class="year-cell">2006</td><td>Bush Jr. (R)</td><td>Feb-2005 – Oct-2006</td><td>4.40</td><td>13.78</td><td>-0.5</td><td>2.81</td><td>-10.0</td><td class="predicted-cell">-41.2</td><td class="result-cell result-neg">-30</td></tr>
+        <tr><td class="year-cell">2010</td><td>Obama (D)</td><td>Feb-2009 – Oct-2010</td><td>0.72</td><td>17.96</td><td>11.4</td><td>1.45</td><td>-127.0</td><td class="predicted-cell">-59.3</td><td class="result-cell result-neg">-63</td></tr>
+        <tr><td class="year-cell">2014</td><td>Obama (D)</td><td>Feb-2013 – Oct-2014</td><td>3.76</td><td>-7.29</td><td>9.3</td><td>2.88</td><td>-44.0</td><td class="predicted-cell">-18.7</td><td class="result-cell result-neg">-13</td></tr>
+        <tr><td class="year-cell">2018</td><td>Trump (R)</td><td>Feb-2017 – Oct-2018</td><td>2.19</td><td>10.72</td><td>2.3</td><td>2.57</td><td>-45.0</td><td class="predicted-cell">-41.8</td><td class="result-cell result-neg">-40</td></tr>
+        <tr><td class="year-cell">2022</td><td>Biden (D)</td><td>Feb-2021 – Oct-2022</td><td>16.07</td><td>36.81</td><td>-16.9</td><td>3.54</td><td>-597.0</td><td class="predicted-cell">-9.9</td><td class="result-cell result-neg">-9</td></tr>
+        <tr class="input-row">
+          <td class="year-cell">2026</td>
+          <td>Trump (R)</td>
+          <td>Feb-2025 – Oct-2026</td>
+          <td><input type="number" id="inp_food" step="0.01" placeholder="0.00"></td>
+          <td><input type="number" id="inp_energy" step="0.01" placeholder="0.00"></td>
+          <td><input type="number" id="inp_sent" step="0.1" placeholder="0.0"></td>
+          <td><input type="number" id="inp_gdp" step="0.01" placeholder="0.00"></td>
+          <td><input type="number" id="inp_icsa" step="0.1" placeholder="0.0"></td>
+          <td class="predicted-cell" id="prediction_cell" style="font-size:1.1em; color:#1F4E79;">—</td>
+          <td class="result-cell" style="color:#999;">?</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="output-section" id="outputSection" style="display:none;">
+    <h3>Estimated House Seat Change for President's Party</h3>
+    <div class="output-number" id="outputNumber"></div>
+    <div class="output-note">Based on the Fireside Equation. R-squared = 0.83, Mean Absolute Error = 6.5 seats.</div>
+    <div class="output-note">This estimate assumes a normal election environment, absent major non-economic shocks.</div>
+  </div>
+
+  <div class="equation-box">
+    <p>House Seat Change = -13.83 + (2.28 &times; CPI-Food%) + (-1.68 &times; CPI-Energy%)<br>
+    + (-1.29 &times; Consumer Sentiment) + (-5.43 &times; GDP%) + (-0.04 &times; ICSA Change in 000s)</p>
+    <div class="equation-stats">R-squared = 0.83 &nbsp; | &nbsp; Mean Absolute Error = 6.5 seats &nbsp; | &nbsp; 12 midterm elections (1978 to 2022)</div>
+  </div>
+
+  <div class="section-heading">Legends</div>
+  <div class="legend-content">
+    <p><span class="legend-label">CPI-Food % Chg:</span> Percentage change in Consumer Price Index for Food from Feb of inauguration year to Oct of midterm year.</p>
+    <p><span class="legend-label">CPI-Energy % Chg:</span> Percentage change in Consumer Price Index for Energy over the same window.</p>
+    <p><span class="legend-label">Consumer Sentiment Pt Chg:</span> Point change in University of Michigan Consumer Sentiment Index over the same window.</p>
+    <p><span class="legend-label">GDP Growth %:</span> Average annualized quarterly GDP growth rate across the data window.</p>
+    <p><span class="legend-label">Jobless Claims Chg (000s):</span> Change in weekly initial jobless claims (in thousands) from Feb of inauguration year to Oct of midterm year.</p>
+    <p><span class="legend-label">Model Predicted:</span> Seat change predicted by the Fireside Equation based on the five input variables.</p>
+    <p><span class="legend-label">Actual Gained/Lost:</span> Actual net change in House seats for the president's party. <span style="color:#2E7D32; font-weight:700;">Green</span> = gained seats. <span style="color:#8B0000; font-weight:700;">Red</span> = lost seats.</p>
+  </div>
+
+  <div class="section-heading">About the Model</div>
+  <div class="legend-content">
+    <p>The Fireside Model is a polls-free forecasting framework for U.S. midterm House elections. It uses only publicly available economic data from federal statistical agencies, with no reliance on polls, approval ratings, or expert ratings.</p>
+    <p>The model measures economic conditions across a 21-month window from February of the president's inauguration year through October of the midterm election year. This captures the full economic trajectory as experienced by voters before Election Day.</p>
+    <p>Eleven economic variables were tested across two categories: Consumer Direct (pocketbook) indicators and Institutional (labor market) indicators. Systematic combination testing identified five variables that collectively explain 83 percent of the variation in House seat changes for the president's party.</p>
+    <p><span class="note-text">Note:</span> The 1994 Republican Revolution is an example of a major non-economic event that produced an outcome outside the model's predictive range.</p>
+  </div>
+
+  <div class="section-heading">Calculation Technique</div>
+  <div class="legend-content">
+    <p>The model uses Ordinary Least Squares (OLS) linear regression estimated on 12 midterm elections from 1978 through 2022.</p>
+    <p>All percentage changes are calculated as: ((Value at October of midterm year) minus (Value at February of inauguration year)) divided by (Value at February of inauguration year), multiplied by 100.</p>
+    <p>Consumer Sentiment is measured as the point change in the index value, not a percentage change.</p>
+    <p>Initial Jobless Claims uses the weekly value nearest to the February and October reference dates.</p>
+    <p>GDP Growth is the average annualized quarterly growth rate across all quarters in the data window.</p>
+    <p>All source data is freely available from the Federal Reserve Economic Data (FRED) database at fred.stlouisfed.org.</p>
+  </div>
+
+  <div class="downloads">
+    <h3>Resources</h3>
+    <a href="FiresideModel_FINAL.xlsx" download>Download Excel Workbook</a>
+    <span class="tbd">Link to Paper: TBD</span>
+  </div>
+
+  <div class="footer">
+    <span>&copy; Dr. Harish Gupta, DPA, Helms School of Government, Liberty University (Alumni)</span><br><br>Dedicated in Honor of 32<sup>nd</sup> President Franklin Delano Roosevelt.
+  </div>
+
+</div>
+
+<script>
+const inputs = ['inp_food', 'inp_energy', 'inp_sent', 'inp_gdp', 'inp_icsa'];
+inputs.forEach(id => { document.getElementById(id).addEventListener('input', calculate); });
+
+function calculate() {
+  const food = parseFloat(document.getElementById('inp_food').value);
+  const energy = parseFloat(document.getElementById('inp_energy').value);
+  const sent = parseFloat(document.getElementById('inp_sent').value);
+  const gdp = parseFloat(document.getElementById('inp_gdp').value);
+  const icsa = parseFloat(document.getElementById('inp_icsa').value);
+
+  const cell = document.getElementById('prediction_cell');
+  const output = document.getElementById('outputSection');
+  const outputNum = document.getElementById('outputNumber');
+
+  if (isNaN(food) || isNaN(energy) || isNaN(sent) || isNaN(gdp) || isNaN(icsa)) {
+    cell.textContent = '\u2014';
+    cell.style.color = '#1F4E79';
+    output.style.display = 'none';
+    return;
+  }
+
+  const result = -13.83 + (2.2798 * food) + (-1.6826 * energy) + (-1.2895 * sent) + (-5.4320 * gdp) + (-0.0447 * icsa);
+  const rounded = Math.round(result * 10) / 10;
+  const sign = rounded >= 0 ? '+' : '';
+
+  cell.textContent = sign + rounded.toFixed(1);
+  cell.style.color = rounded >= 0 ? '#2E7D32' : '#8B0000';
+
+  output.style.display = 'block';
+  outputNum.textContent = sign + rounded.toFixed(1) + ' seats';
+  outputNum.style.color = rounded >= 0 ? '#81C784' : '#EF9A9A';
+}
+</script>
+
+</body>
+</html>
