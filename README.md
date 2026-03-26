@@ -27,16 +27,12 @@ All data measured from February of inauguration year through October of midterm 
 ## Files
 
 - `index.html` — Interactive website with calculator and historical data
-- `FiresideModel_FINAL.xlsx` — Complete dataset with Consumer and Institutional worksheets
-- `ManuscriptV1.docx` — Research paper
+- `FiresideModelV17.xlsx` — Complete dataset with Consumer and Institutional worksheets
+- `Manuscript.docx` — Research paper. Link to paper: TBD
 
 ## Data Source
 
 All data from [FRED](https://fred.stlouisfed.org) (Federal Reserve Economic Data), freely available.
-
-## Link to Paper
-
-TBD
 
 ---
 
